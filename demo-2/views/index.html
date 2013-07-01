@@ -24,6 +24,8 @@
       <script type="text/javascript">
       	   var map;
       	   var typeIdChangeListener;
+      	   var thePanorama;
+      	   var streetviewChangeListener;
 	      function initialize() {
 	        var mapOptions = {
 	          center: new google.maps.LatLng(-34.397, 150.644),
@@ -33,55 +35,76 @@
 	        map = new google.maps.Map(document.getElementById("map-canvas"),
 	            mapOptions);
 
-		     
+		    /*** streetview ***/
+		    thePanorama = map.getStreetView();
 
 	          <!-- google maps events -->
 	  		  <!-- zoom -->
 	  		    google.maps.event.addListener(map, 'idle', function() {
 			  	 // worker.postMessage({'cmd': 'dragend'});
-			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId() });
 
+			  	 emitEvents();
+ 				// socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: thePanorama.getVisible() });
 			  	 //socket.emit('my other event', { my: 'dragend' });
 
 				    
 			  });
+
+	  		//  streetviewChangeListener =  google.maps.event.addListener(thePanorama, 'visible_changed', function() {
+	  		//   	console.log('streetview changed');
+	  		//   	console.log('streetview panorama position: ' + thePanorama.getPosition() + ' zoom: ' + thePanorama.getZoom());
+	  		//     emitEvents();
+				 // // socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: thePanorama.getVisible() });
+							  
+
+		   //   });
+
+		     streetviewChangeListener = google.maps.event.addListener(thePanorama, 'zoom_changed', function() {
+	  		  	console.log('zoom_changed ');
+	  		  	console.log('streetview panorama position: ' + thePanorama.getPosition() + ' zoom: ' + thePanorama.getZoom());
+	  		    emitEvents({position: thePanorama.getPosition(),  zoom: thePanorama.getZoom()});
+				 // socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: thePanorama.getVisible() });
+							  
+
+		     });
+
+		   //   google.maps.event.addListener(thePanorama, 'visible_changed', function() {
+	  		//   	console.log('visible_changed ');
+	  		//   	// console.log('streetview panorama position: ' + thePanorama.getPosition() + ' zoom: ' + thePanorama.getZoom());
+	  		//   	if (!thePanorama.getVisible()){
+	  		//   		emitEvents();
+	  		//   	} else {
+	  		//   		return;
+	  		//   	}
+	  		    
+				 // // socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: thePanorama.getVisible() });
+							  
+
+		   //   });
+
 
 	  		  typeIdChangeListener =  google.maps.event.addListener(map, 'maptypeid_changed', function() {
 	  		   	console.log('maptypeid_changed');
 			  	 // worker.postMessage({'cmd': 'dragend'});
-			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId() });
-
+ 
 			  	 //socket.emit('my other event', { my: 'dragend' });
 
 				    
 			  });
 
+			   
+
+			 
+
 	  		    
-	  		//   google.maps.event.addListener(map, 'zoom_changed', function() {
+	  		
+	      }
 
-	  		//   	 // worker.postMessage({'cmd': 'zoom_changed'});
-			  // 	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng() });
-
-				    
-			  // });
-
-			  // google.maps.event.addListener(map, 'dragstart', function() {
-			  // 	 // worker.postMessage({'cmd': 'dragstart'});
-			  // 	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng() });
-
-			  //    // socket.emit('my other event', { my: 'dragstart' });
-
-				    
-			  // });
-
-			  // google.maps.event.addListener(map, 'dragend', function() {
-			  // 	 // worker.postMessage({'cmd': 'dragend'});
-			  // 	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng() });
-
-			  // 	 //socket.emit('my other event', { my: 'dragend' });
-
-				    
-			  // });
+	      function emitEvents(data){
+	      	console.log(' streetview visibility value::' + thePanorama.getVisible());
+	      	var streetviewVisibility = false;
+	      	streetviewVisibility = thePanorama.getVisible();
+	      	socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: streetviewVisibility, panoramaData: data});
 	      }
 	      google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -95,23 +118,68 @@
 
 
 		var socket = io.connect('http://107.21.207.8:8090/');
+		// var socket = io.connect('http://localhost');
 		  socket.on('news', function (data) {
 		    console.log(data);
 		    socket.emit('my other event', { my: 'data' });
 		  });
 
 		   socket.on('map_event', function (data) {
-		    console.log("map_event received: " + data);
+		    console.log("map_event received: " + JSON.stringify(data));
 		   map.setCenter(new google.maps.LatLng(data.lat, data.lng));
 		   map.setZoom(data.zoom);
+		   google.maps.event.removeListener(streetviewChangeListener);
+		   //check if showing streetview currently?
+		   if (data.panoramaData!=undefined){
+
+
+			   if (data.streetview) {
+			   		if (thePanorama.getVisible()){
+			   			return;
+			   		}
+			   		console.log('show streetview')
+			   		console.log('panorama position lat ' + data.panoramaData.position.jb + ' lng: ' + data.panoramaData.position.kb );
+			   		thePanorama.setPosition(new google.maps.LatLng(data.panoramaData.position.jb, data.panoramaData.position.kb ));
+
+			   		thePanorama.setZoom(data.panoramaData.zoom);
+			   		map.setStreetView(thePanorama);
+			   		thePanorama.setVisible(true);
+			   } else {
+			   		console.log('hide streetview');
+			   	    thePanorama.setVisible(false);
+			   	    map.setStreetView(thePanorama);
+			   }
+			} else {
+				if (!data.streetview) {
+			   		console.log('hide streetview');
+			   	    thePanorama.setVisible(false);
+			   	    map.setStreetView(thePanorama);
+			   	}
+			}
+
 		   google.maps.event.removeListener(typeIdChangeListener);
 
 		   map.setMapTypeId(data.type);
 
+	
+		  // google.maps.event.addListener(streetviewChangeListener);
+		  // google.maps.event.addListener(typeIdChangeListener);
+
+		   streetviewChangeListener =  google.maps.event.addListener(thePanorama, 'zoom_changed', function() {
+	  		  	console.log('zoom_changed changed position: ' + thePanorama.getPosition() + " zoom: " + thePanorama.getZoom());
+	  		    // emitEvents();
+	  		    emitEvents({position: thePanorama.getPosition(), zoom: thePanorama.getZoom()});
+
+				 // socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: thePanorama.getVisible() });
+							  
+
+		     });
+
 		  typeIdChangeListener =   google.maps.event.addListener(map, 'maptypeid_changed', function() {
 	  		   	console.log('maptypeid_changed');
 			  	 // worker.postMessage({'cmd': 'dragend'});
-			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId() });
+			  	 emitEvents();
+			  	 // socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId(), streetview: thePanorama.getVisible() });
 
 			  	 //socket.emit('my other event', { my: 'dragend' });
 
@@ -119,6 +187,10 @@
 			  });
 		    // socket.emit('my other event', { my: 'data' });
 		  });
+
+		 
+
+		   
 
 
 	    /* websockets */
