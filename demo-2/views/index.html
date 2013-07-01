@@ -23,11 +23,12 @@
      <!-- initialize the google map -->
       <script type="text/javascript">
       	   var map;
+      	   var typeIdChangeListener;
 	      function initialize() {
 	        var mapOptions = {
 	          center: new google.maps.LatLng(-34.397, 150.644),
 	          zoom: 8,
-	          mapTypeId: google.maps.MapTypeId.ROADMAP
+	          mapTypeId: google.maps.MapTypeId.TERRAIN
 	        };
 	        map = new google.maps.Map(document.getElementById("map-canvas"),
 	            mapOptions);
@@ -38,12 +39,24 @@
 	  		  <!-- zoom -->
 	  		    google.maps.event.addListener(map, 'idle', function() {
 			  	 // worker.postMessage({'cmd': 'dragend'});
-			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng() });
+			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId() });
 
 			  	 //socket.emit('my other event', { my: 'dragend' });
 
 				    
 			  });
+
+	  		  typeIdChangeListener =  google.maps.event.addListener(map, 'maptypeid_changed', function() {
+	  		   	console.log('maptypeid_changed');
+			  	 // worker.postMessage({'cmd': 'dragend'});
+			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId() });
+
+			  	 //socket.emit('my other event', { my: 'dragend' });
+
+				    
+			  });
+
+	  		    
 	  		//   google.maps.event.addListener(map, 'zoom_changed', function() {
 
 	  		//   	 // worker.postMessage({'cmd': 'zoom_changed'});
@@ -81,7 +94,7 @@
 	 //   	}, false);
 
 
-		var socket = io.connect('http://107.21.207.8:8090/');
+		var socket = io.connect('http://localhost');
 		  socket.on('news', function (data) {
 		    console.log(data);
 		    socket.emit('my other event', { my: 'data' });
@@ -91,6 +104,19 @@
 		    console.log("map_event received: " + data);
 		   map.setCenter(new google.maps.LatLng(data.lat, data.lng));
 		   map.setZoom(data.zoom);
+		   google.maps.event.removeListener(typeIdChangeListener);
+
+		   map.setMapTypeId(data.type);
+
+		  typeIdChangeListener =   google.maps.event.addListener(map, 'maptypeid_changed', function() {
+	  		   	console.log('maptypeid_changed');
+			  	 // worker.postMessage({'cmd': 'dragend'});
+			  	 socket.emit('map_event', { zoom: map.getZoom(), lat: map.getCenter().lat(), lng: map.getCenter().lng(), type: map.getMapTypeId() });
+
+			  	 //socket.emit('my other event', { my: 'dragend' });
+
+				    
+			  });
 		    // socket.emit('my other event', { my: 'data' });
 		  });
 
@@ -132,6 +158,5 @@
 <body>
 	<div id="map-canvas">
 	</div>
-	<button id="send-message">Send Message</button>
 </body>
 </html>
