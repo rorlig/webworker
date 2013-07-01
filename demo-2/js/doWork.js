@@ -1,3 +1,4 @@
+/* todo send the message and object to the server */
 self.addEventListener('message', function(e) {
   var data = e.data;
   switch (data.cmd) {
