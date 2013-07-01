@@ -1,0 +1,38 @@
+<html>
+<head>
+  <title>
+      Webworker Simple Demo using html5 rocks example...
+  </title>
+   <script>
+    <!-- functions sending data to worker --> 
+    function sayHI() {
+      worker.postMessage({'cmd': 'start', 'msg': 'Hi'});
+    }
+
+    function stop() {
+      // worker.terminate() from this script would also stop the worker.
+      worker.postMessage({'cmd': 'stop', 'msg': 'Bye'});
+    }
+
+    function unknownCmd() {
+      worker.postMessage({'cmd': 'foobard', 'msg': '???'});
+    }
+
+    var worker = new Worker('doWork.js');
+
+    <!-- listener for callbacks from worker -->
+    worker.addEventListener('message', function(e) {
+      document.getElementById('result').textContent = e.data;
+    }, false);
+  </script>
+</head>
+<body>
+
+  <button onclick="sayHI()">Say HI</button>
+  <button onclick="unknownCmd()">Send unknown command</button>
+  <button onclick="stop()">Stop worker</button>
+  <output id="result"></output>
+
+ 
+</body>
+</html>
