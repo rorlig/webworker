@@ -27,4 +27,9 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('map_event', data);
     // console.log(data);
   });
+  socket.on('streetview_event', function (data) {
+    console.log('streetview_event received');
+    io.sockets.emit('streetview_event', data);
+    // console.log(data);
+  });
 });
