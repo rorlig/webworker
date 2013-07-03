@@ -30,6 +30,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('streetview_event', function (data) {
     console.log('streetview_event received');
     io.sockets.emit('streetview_event', data);
-    // console.log(data);
+    console.log(data);
   });
 });
