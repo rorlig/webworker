@@ -21,11 +21,12 @@ function handler (req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
+  console.log('connection established'); 
   socket.emit('news', { hello: 'world' });
   socket.on('map_event', function (data) {
     console.log('map_event received');
     io.sockets.emit('map_event', data);
-    // console.log(data);
+    console.log(data);
   });
   socket.on('streetview_event', function (data) {
     console.log('streetview_event received');
