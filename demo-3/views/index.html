@@ -71,9 +71,11 @@
 		  
 		// map events
 		   socket.on('map_event', function (data) {
+                   var latlng = data.split(',');
 		    console.log("map_event received: " + JSON.stringify(data));
-		  	map.setCenter(new google.maps.LatLng(data.lat, data.lng));
-		  	map.setZoom(data.zoom);
+                    console.log("data lat: "  + data +  " long" + data[1]);
+		  	map.setCenter(new google.maps.LatLng(latlng[0], latlng[1]));
+		  //	map.setZoom(data.zoom);
 		 //  	//remove the typechangelistener 
 		 //    google.maps.event.removeListener(typeIdChangeListener);
 
