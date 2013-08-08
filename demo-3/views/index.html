@@ -54,7 +54,7 @@
 			    strokeOpacity: 1.0,
 			    strokeColor: 'fff000',
 			    strokeWeight: 3.0, 
-			    scale: 20 //pixels
+			    scale: 10 //pixels
 			  }
 		 	 });
 
@@ -76,7 +76,7 @@
 		    console.log("map_event received: " + JSON.stringify(data));
 	        console.log("data lat: "  + data +  " long" + data[1]);
 	        var updatedLatLng = new google.maps.LatLng(latlng[0], latlng[1]);
-		  	map.setCenter(updatedLatLng);
+		  	// map.setCenter(updatedLatLng);
 		  	marker.setPosition(updatedLatLng);
 
 		});
