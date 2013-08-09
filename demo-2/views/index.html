@@ -14,7 +14,7 @@
 
     <!-- load google maps -->
      <script type="text/javascript"
-      	src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyDImJSFKbHpMtC3-ESjxCVz3PqTouQw5FQ">
+      	src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyCnazeNe_GGecl_UIFkSyWXWoq3Sh-N0_Y">
      </script>
 
      <script src="/socket.io/socket.io.js"></script>
@@ -118,15 +118,16 @@
 
 		    			if (!thePanorama.getVisible()){
 		    				console.log('panorama is not already showing');
-		    				console.log(' position lat: ' + data.panoramaData.position.jb  + " lng: " + data.panoramaData.position.kb);
-					    	thePanorama.setPosition(new google.maps.LatLng(data.panoramaData.position.jb, data.panoramaData.position.kb ));
+		    				console.log(' position lat: ' + data.panoramaData.position[0]  + " lng: " + data.panoramaData.position[1]);
+					    	thePanorama.setPosition(new google.maps.LatLng(data.panoramaData.position.lb, data.panoramaData.position.mb));
 							thePanorama.setZoom(1);
 							map.setStreetView(thePanorama);
 					   		thePanorama.setVisible(true);
 					   	} else {
 					   		console.log('panorama is already showing');
 					   		console.log('setting position');
-					   		thePanorama.setPosition(new google.maps.LatLng(data.panoramaData.position.jb, data.panoramaData.position.kb ));
+					   		thePanorama.setPosition(new google.maps.LatLng(data.panoramaData.position.lb, 
+					   			data.panoramaData.position.mb));
 
 				   	}
 		   		}
