@@ -46,7 +46,7 @@
 	          mapTypeId: google.maps.MapTypeId.TERRAIN
 	        };
 
-	        contentString += "Location <br> lat:" + initialLatLng.lat() + " <br> lng:" + initialLatLng.lng() + "<br />";
+	        contentString += "<p>Location <br> lat:" + initialLatLng.lat() + " <br> lng:" + initialLatLng.lng() + "<br /></p>";
 
 	        map = new google.maps.Map(document.getElementById("map-canvas"),
 	            mapOptions);
@@ -68,8 +68,8 @@
 		    infowindow = new google.maps.InfoWindow({
 		    	content: contentString	
 		   	});
-		    infowindow.open(map, marker);
-		    
+		    // infowindow.open(map, marker);
+
 		    google.maps.event.addListener(marker, 'click', function() {
  				 infowindow.open(map,marker);
 			});
