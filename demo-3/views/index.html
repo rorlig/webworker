@@ -68,10 +68,11 @@
 		    infowindow = new google.maps.InfoWindow({
 		    	content: contentString	
 		   	});
-
-		    google.maps.event.addListener(marker, 'click', function() {
- 				 infowindow.open(map,marker);
-			});
+		    infowindow.open(map, marker);
+		    
+		 //    google.maps.event.addListener(marker, 'click', function() {
+ 		// 		 infowindow.open(map,marker);
+			// });
 
 	  		
 
@@ -94,6 +95,7 @@
 		  	// map.setCenter(updatedLatLng);
 		  	marker.setPosition(updatedLatLng);
 		  	infowindow.setContent(updatedContentString);
+
 
 		});
 
