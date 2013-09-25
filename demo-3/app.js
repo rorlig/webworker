@@ -2,6 +2,8 @@
     , io = require('socket.io').listen(app)
     , fs = require('fs')
 
+  console.log('starting socket.io server started on port 8080');
+
   app.listen(8080);
 
   // usernames which are currently connected to the chat
@@ -20,16 +22,12 @@
     });
   }
 
+
   io.sockets.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
     socket.on('map_event', function (data) {
       console.log('map_event received');
+      //for the purposes of data collection and building paths for demo
+      console.log(newDate.timeNow(), data.args[0], data.args[1]);
       io.sockets.emit('map_event', data);
-      // console.log(data);
     });
-    // socket.on('streetview_event', function (data) {
-    //   console.log('streetview_event received');
-    //   io.sockets.emit('streetview_event', data);
-    //   console.log(data);
-    // });
   });

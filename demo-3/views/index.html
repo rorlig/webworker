@@ -33,6 +33,8 @@
       	   var streetviewPovListener;
       	   var initialLatLng;
       	   var marker;
+      	   var infoWindow;
+      	   var contentString = "";
 
 	      function initialize() {
 	      	initialLatLng = new google.maps.LatLng(42.39, -71.27);
@@ -41,6 +43,9 @@
 	          zoom: 18,
 	          mapTypeId: google.maps.MapTypeId.TERRAIN
 	        };
+
+	        contentString += "Location <br> lat:" + initialLatLng.lat() + " <br> lng:" + initialLatLng.lng() + "<br />";
+
 	        map = new google.maps.Map(document.getElementById("map-canvas"),
 	            mapOptions);
 
@@ -58,7 +63,14 @@
 			  }
 		 	 });
 
-		    
+		    infowindow = new google.maps.InfoWindow({
+		    	content: contentString	
+		   	});
+
+		    google.maps.event.addListener(marker, 'click', function() {
+ 				 infowindow.open(map,marker);
+			});
+
 	  		
 
 	  		
@@ -76,8 +88,10 @@
 		    console.log("map_event received: " + JSON.stringify(data));
 	        console.log("data lat: "  + data +  " long" + data[1]);
 	        var updatedLatLng = new google.maps.LatLng(latlng[0], latlng[1]);
+	        var updatedContentString = "Location: lat:" + updatedLatLng.lat() + " lng:" + updatedLatLng.lng() + "<br />";
 		  	// map.setCenter(updatedLatLng);
 		  	marker.setPosition(updatedLatLng);
+		  	infowindow.setContent(updatedContentString);
 
 		});
 
