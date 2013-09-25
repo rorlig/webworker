@@ -88,7 +88,7 @@
 		socket.on('map_event', function (data) {
 	        var latlng = data.split(',');
 		    // console.log("map_event received: " + JSON.stringify(data));
-	        console.log("data lat: "  + latLng[0] +  " long" + latLng[1]);
+	        console.log("data lat: "  + latlng[0] +  " long" + latlng[1]);
 	        var updatedLatLng = new google.maps.LatLng(latlng[0], latlng[1]);
 	        var updatedContentString = "Location <br> lat:" + latlng[0] + "<br> lng:" + latlng[1] + "<br />";
 		  	// map.setCenter(updatedLatLng);
