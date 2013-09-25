@@ -84,7 +84,7 @@
 	     
 
 
-		var socket = io.connect(developmentIP);
+		var socket = io.connect(stagingIP);
 		socket.on('map_event', function (data) {
 	        var latlng = data.split(',');
 		    console.log("map_event received: " + JSON.stringify(data));
