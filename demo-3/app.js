@@ -8,6 +8,7 @@
 
   // usernames which are currently connected to the chat
   var usernames = {};
+  var newDate = new Date();
 
   function handler (req, res) {
     fs.readFile(__dirname + '/views/index.html',
