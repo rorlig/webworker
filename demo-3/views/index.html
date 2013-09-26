@@ -37,6 +37,8 @@
       	   var contentString = "";
       	   var developmentIP = "http://localhost:8080/"
       	   var stagingIP = "http://54.225.249.57:8080/"
+      	   var stagingIP2 = "http://54.225.249.57:8090/"
+
 
 	      function initialize() {
 	      	initialLatLng = new google.maps.LatLng(42.39, -71.27);
@@ -85,7 +87,7 @@
 	     
 
 
-		var socket = io.connect(stagingIP);
+		var socket = io.connect(stagingIP2);
 		socket.on('map_event', function (data) {
 	        var latlng = data.split(',');
 		    // console.log("map_event received: " + JSON.stringify(data));
@@ -94,6 +96,7 @@
 	        var updatedContentString = "Location <br> lat:" + latlng[0] + "<br> lng:" + latlng[1] + "<br />";
 		  	// map.setCenter(updatedLatLng);
 		  	marker.setPosition(updatedLatLng);
+		  	map.setCenter(updatedLatLng);
 		  	infowindow.setContent(updatedContentString);
 
 
