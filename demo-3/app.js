@@ -2,9 +2,9 @@
     , io = require('socket.io').listen(app)
     , fs = require('fs')
 
-  console.log('starting socket.io server started on port 8090');
+  console.log('starting socket.io server started on port 8080');
 
-  app.listen(8090);
+  app.listen(8080);
 
   // usernames which are currently connected to the chat
   var usernames = {};
@@ -27,9 +27,9 @@
   io.sockets.on('connection', function (socket) {
     socket.on('map_event', function (data) {
       console.log('map_event received' + data);
-      var latlng = data.split(',')
+      var parsedData = data.split(',')
       //for the purposes of data collection and building paths for demo
-      console.log(newDate.getTime(), latlng[0], latlng[1]);
+      console.log(newDate.getTime() + "," + parsedData[0] + ","  + parsedData[1] + "," + parsedData[2]);
       io.sockets.emit('map_event', data);
     });
   });

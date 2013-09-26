@@ -99,7 +99,7 @@
 	     
 
 
-		var socket = io.connect(stagingIP2);
+		var socket = io.connect(stagingIP);
 		socket.on('map_event', function (data) {
 	        var parseData = data.split(',');
 		    console.log("map_event received: " + JSON.stringify(data));
