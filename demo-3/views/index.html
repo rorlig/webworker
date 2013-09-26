@@ -105,7 +105,7 @@
 		    console.log("map_event received: " + JSON.stringify(data));
 	        console.log("data lat:"  + parseData[0] +  " long:" + parseData[1] + " phoneNumber:" + parseData[2]);
 	        var updatedLatLng = new google.maps.LatLng(parseData[0], parseData[1]);
-	        contentString = $("<div class='infowin-content'>Phone Number: unknown <br> "+ parseData[2] + " Latitude: " 
+	        contentString = $("<div class='infowin-content'>Phone Number:   "+ parseData[2] + " <br> Latitude: " 
 	        				+ parseData[0] + "<br> Longitude: " + parseData[1] + "<br> </div>");
 
 		  	// map.setCenter(updatedLatLng);
