@@ -102,9 +102,9 @@
 		var socket = io.connect(stagingIP2);
 		socket.on('map_event', function (data) {
 	        var parseData = data.split(',');
-		    // console.log("map_event received: " + JSON.stringify(data));
+		    console.log("map_event received: " + JSON.stringify(data));
 	        console.log("data lat:"  + parseData[0] +  " long:" + parseData[1] + " phoneNumber:" + parseData[2]);
-	        var updatedLatLng = new google.maps.LatLng(latlng[0], latlng[1]);
+	        var updatedLatLng = new google.maps.LatLng(parseData[0], parseData[1]);
 	        contentString = $("<div class='infowin-content'>Phone Number: unknown <br> "+ parseData[2] + " Latitude: " 
 	        				+ parseData[0] + "<br> Longitude: " + parseData[1] + "<br> </div>");
 
