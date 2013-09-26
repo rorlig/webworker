@@ -9,11 +9,24 @@
 	 <style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
-      #map-canvas { height: 100% }
-      #content {overflow: hidden;}
+      #map-canvas { height: 100% ;     
+      				line-height:normal !important;}
+      #content {
+      	max-width: 400px;
+      	line-height: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        font-family: "Comic Sans MS", cursive !important;
+
+      }
     </style>
 
     <!-- load google maps -->
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+     <script type="text/javascript"
+      	src="https://maps.googleapis.com/maps/api/js?sensor=false">
+     </script>
+
      <script type="text/javascript"
       	src="https://maps.googleapis.com/maps/api/js?sensor=false">
      </script>
@@ -49,7 +62,8 @@
 	          mapTypeId: google.maps.MapTypeId.TERRAIN
 	        };
 
-	        contentString += "<div id = "#content"><p>Location <br> lat:" + initialLatLng.lat() + " <br> lng:" + initialLatLng.lng() + "<br /></p><";
+	        //contentString = 'Phone Number:  Latitude: 42.39 Longitude: -71.27';
+	         contentString = $("<div class='infowin-content'>Phone Number: unknown <br>"+ " Latitude: " + initialLatLng.lat() + "<br> Longitude: " + initialLatLng.lng() + " </div>");
 
 	        map = new google.maps.Map(document.getElementById("map-canvas"),
 	            mapOptions);
@@ -69,12 +83,13 @@
 		 	 });
 
 		    infowindow = new google.maps.InfoWindow({
-		    	content: contentString	
 		   	});
 		    // infowindow.open(map, marker);
 
 		    google.maps.event.addListener(marker, 'click', function() {
  				 infowindow.open(map,marker);
+ 				 infowindow.setContent(contentString[0]);
+
 			});
 
 	  		
@@ -94,11 +109,13 @@
 		    // console.log("map_event received: " + JSON.stringify(data));
 	        console.log("data lat: "  + latlng[0] +  " long" + latlng[1]);
 	        var updatedLatLng = new google.maps.LatLng(latlng[0], latlng[1]);
-	        var updatedContentString = "Location <br> lat:" + latlng[0] + "<br> lng:" + latlng[1] + "<br />";
+	        contentString = $("<div class='infowin-content'>Phone Number: unknown <br>"+ " Latitude: " 
+	        				+ latlng[0] + "<br> Longitude: " + latlng[1] + " </div>");
+
 		  	// map.setCenter(updatedLatLng);
 		  	marker.setPosition(updatedLatLng);
 		  	map.setCenter(updatedLatLng);
-		  	infowindow.setContent(updatedContentString);
+		  	infowindow.setContent(contentString);
 
 
 		});

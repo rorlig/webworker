@@ -2,9 +2,9 @@
     , io = require('socket.io').listen(app)
     , fs = require('fs')
 
-  console.log('starting socket.io server started on port 8080');
+  console.log('starting socket.io server started on port 8090');
 
-  app.listen(8080);
+  app.listen(8090);
 
   // usernames which are currently connected to the chat
   var usernames = {};
